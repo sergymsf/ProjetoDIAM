@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <title>ClosetMeet</title>
+  </head>
+
+  <body>
+    <a class="logo" href="">
+      <img class="logo" src="{% static 'core/images/tshirt.png' %}" alt="T-Shirt" />
+    </a>
+    <div class="container">
+      <div class="welcome">
+        <h2>Welcome to</h2>
+        <h1>ClosetMeet</h1>
+        <p>
+          Dive into your wardrobe and upload pictures of your favorite pieces.
+          Whether it's that funky pair of patterned pants, your trusty denim
+          jacket, or those killer heels you just can't get enough of, showcase
+          your style and let others see your fashion flair.
+        </p>
+      </div>
+      <div class="user-login">
+        {% if user.is_authenticated %}
+          <h2>Bem vindo de volta , {{ user.username }}!</h2>
+          <a class="logout" href="{% url 'core:logout_handler' %}">Logout</a>
+          <a class="profile" href="{% url 'core:personal_page' %}">Your Account</a>
+        {% else %}  
+          <h2>Login/Create Account</h2>
+          <p>
+              Join our vibrant community of fashion enthusiasts and unleash your styling skills!
+          </p>
+          <a href="{% url 'core:join_page' %}"><button>Sign In/Up</button></a>
+        {% endif%}
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

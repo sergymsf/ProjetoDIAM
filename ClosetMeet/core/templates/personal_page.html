@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your Page</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'core/personal_page.css' %}">
+
+</head>
+<body> 
+    <nav class="header">
+        <a href="{% url 'core:initial_page'%}" style="margin-left:70px;">
+            <img class="logo" src="{% static 'core/images/tshirt.png' %}" alt="T-Shirt" />
+        </a>
+        {% block content %}
+            <div style="margin-right: 30px;" class="user-info">
+                <p><i class="fa fa-user" aria-hidden="true"></i> Name: {{ user.username }} </p>
+                <p><i class="fa fa-envelope" aria-hidden="true"></i> Email: {{ user.email}} </p>
+            </div>
+        {% endblock %}
+    </nav>
+    
+    <main>
+        <div class="sidebar">
+            <p><i class="fa fa-pencil" aria-hidden="true" style="margin-top:28px;"></i> Edit Profile</p>
+            <p><i class="fa fa-check-square" aria-hidden="true"></i> My Creations</p> 
+            <p><i class="fa fa-upload" aria-hidden="true"></i> Upload Clothes</p>
+            <p><i class="fa fa-plus-square" aria-hidden="true"></i> Create Outfit</p>
+            <p><i class="fa fa-users" aria-hidden="true"></i> Friends</p>
+            
+            
+        </div>
+        <div class="content">
+            {% if dont_has_picture %}
+                <img id="user-photo" src="{% static 'core/images/default_picture.jpeg' %}">
+            {% else %}
+                <img id="user-photo" src="{% static 'core/images/tshirt.png' %}">
+            {% endif %}
+
+            <div class="user-info">
+                <h1 id="username">{{request.user.username }}</h1>
+                <h3 style="color: #252525;">Bio:</h3>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
