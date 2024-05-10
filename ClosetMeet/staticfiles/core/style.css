@@ -269,7 +269,7 @@ h1 {
   font-size: 72px;
   margin: 0 0 10px 0;
   background: -webkit-linear-gradient(#222, #5e503f);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

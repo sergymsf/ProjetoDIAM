@@ -15,18 +15,21 @@
             <img class="logo" src="{% static 'core/images/tshirt.png' %}" alt="T-Shirt" />
         </a>
         {% block content %}
-            <div style="margin-right: 30px;" class="user-info">
-                <p><i class="fa fa-user" aria-hidden="true"></i> Name: {{ user.username }} </p>
-                <p><i class="fa fa-envelope" aria-hidden="true"></i> Email: {{ user.email}} </p>
-            </div>
         {% endblock %}
     </nav>
     
     <main>
         <div class="sidebar">
-            <p><i class="fa fa-pencil" aria-hidden="true" style="margin-top:28px;"></i> Edit Profile</p>
+            <a href="{% url 'core:edit_profile'%}">
+                <p><i class="fa fa-pencil" aria-hidden="true" style="margin-top:28px;"></i> Edit Profile</p>
+            </a>
+                
             <p><i class="fa fa-check-square" aria-hidden="true"></i> My Creations</p> 
-            <p><i class="fa fa-upload" aria-hidden="true"></i> Upload Clothes</p>
+            
+            <a href="{% url 'core:add_clothing_item'%}">
+                <p><i class="fa fa-upload" aria-hidden="true"></i> Upload Clothes</p>
+            </a>
+            
             <p><i class="fa fa-plus-square" aria-hidden="true"></i> Create Outfit</p>
             <p><i class="fa fa-users" aria-hidden="true"></i> Friends</p>
             
@@ -36,12 +39,13 @@
             {% if dont_has_picture %}
                 <img id="user-photo" src="{% static 'core/images/default_picture.jpeg' %}">
             {% else %}
-                <img id="user-photo" src="{% static 'core/images/tshirt.png' %}">
+                <img id="user-photo" src="{% static  'core/images/'%}{{user.username}}.png">
             {% endif %}
 
             <div class="user-info">
                 <h1 id="username">{{request.user.username }}</h1>
-                <h3 style="color: #252525;">Bio:</h3>
+                <h3 style="color: #4B4B4B; margin-bottom:0px;">Bio:</h3>
+                <h1 style="color: #4B4B4B; margin-top:0px;"> {{request.user.profile.bio}}</h1>
             </div>
         </div>
     </main>
