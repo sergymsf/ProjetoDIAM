@@ -1,6 +1,6 @@
 import os
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from .models import ClothingItem, Profile
 from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
 
@@ -30,7 +29,6 @@ def personal_page(request):
 @login_required(login_url=  'core:join_page')
 def edit_profile(request):
     profile = request.user.profile
-
     if request.method == 'POST':
         if 'profile-picture' in request.FILES:
             if profile.picture:
@@ -48,7 +46,6 @@ def edit_profile(request):
             profile.bio = request.POST['bio']
         profile.save()
         return HttpResponseRedirect(reverse('core:personal_page'))
-
     return render(request, 'edit_page.html', {'profile': profile})
 
 def login_handler(request):
@@ -99,22 +96,46 @@ def signin_handler(request):
 
 @login_required(login_url=  'core:join_page')
 def add_clothing_item(request):
+    dont_has_picture = True
+    if request.user.profile.picture:
+        dont_has_picture = False
     if request.method == 'POST':
-        image = request.FILES.get('clothing-image')
-        name = request.POST.get('name')
-        description = request.POST.get('description')
-        price = request.POST.get('price')
+        new_clothing_item = ClothingItem(
+        image = request.FILES.get('clothing-image'),
+        name = request.POST.get('name'),
+        description = request.POST.get('description'),
+        price = request.POST.get('price'),
         owner = request.user  
-
-        new_clothing_item = ClothingItem.objects.create(
-            owner=owner,
-            image=image,
-            name=name,
-            description=description,
-            price=price
         )
-        return redirect('personal_page.html')  # Redirect to the clothing item list page
-    
-    return render(request, 'add_clothing_item.html')
+        new_clothing_item.save()
+        return HttpResponseRedirect(reverse('core:personal_page')) 
+    return render(request, 'add_clothing_item.html', {'dont_has_picture': dont_has_picture})
 
+def user_clothing_items(request):
+    user_clothing_items = ClothingItem.objects.filter(owner=request.user)
+    context = {
+        'user_clothing_items': user_clothing_items
+    }
+    return render(request, 'user_clothing_items.html', context)
+
+def detail_item(request, item_id):
+    item = ClothingItem.objects.get(id=item_id)
+    return render(request, 'detail_item.html', {'item': item})
+
+def remove_item(request, item_id):
+    item = get_object_or_404(ClothingItem, pk=item_id)
+    item.delete()
+    return HttpResponseRedirect(reverse('core:personal_page')) 
+
+
+def add_favorite(request, item_id):
+    item = get_object_or_404(ClothingItem, pk=item_id)
+    profile = request.user.profile  # Assuming you have a Profile model associated with User
+
+    # Assign the item as the favorite clothing item for the user's profile
+    profile.favorite_clothing_item = item
+    profile.save()
+
+    # Redirect to a relevant page
+    return redirect('core:detail_item', item_id=item_id)
 

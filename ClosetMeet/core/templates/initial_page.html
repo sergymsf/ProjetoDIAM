@@ -8,13 +8,426 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <link rel="stylesheet" href="{% static 'core/style.css' %}" />
     <title>ClosetMeet</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+
+      :root {
+        --color1: #5e503f;
+        --color2: #342411;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Montserrat", sans-serif;
+        color: #fff;
+      }
+
+      body {
+        background: linear-gradient(to right, #f5f5dc, #e8c78b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      h1 {
+        font-size: 2em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+      }
+
+      .forms {
+        background-color: var(--color1);
+        border-radius: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+        position: relative;
+        overflow: hidden;
+        width: 50%;
+        height: 70%;
+        max-width: 100%;
+        min-width: 800px;
+        min-height: 480px;
+        display: grid;
+      }
+
+      .forms p {
+        font-size: 120%;
+        line-height: 20px;
+        letter-spacing: 0.3px;
+        margin-bottom: 0.6em;
+      }
+
+      .forms span {
+        font-size: 120%;
+        margin: 0.4em;
+        margin-bottom: 0.6em;
+      }
+
+      .forms a {
+        color: #333;
+        font-size: 120%;
+        text-decoration: none;
+        margin: 1em;
+      }
+
+      .forms button {
+        background-color: var(--color2);
+        color: #fff;
+        font-size: 1em;
+        padding: 10px 45px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin: 1em;
+        cursor: pointer;
+      }
+
+      .forms button.hidden {
+        background-color: transparent;
+        border-color: #fff;
+      }
+
+      .forms form {
+        background-color: #5e503f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 40px;
+        height: 100%;
+      }
+
+      .forms input {
+        background-color: #eee;
+        border: none;
+        margin: 8px 0;
+        padding: 10px 15px;
+        font-size: 1em;
+        border-radius: 8px;
+        width: 100%;
+        outline: none;
+      }
+
+      .forms form input {
+        color: #333;
+      }
+
+      .form-container {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        transition: all 0.6s ease-in-out;
+      }
+
+      .sign-in {
+        left: 0;
+        width: 50%;
+        z-index: 2;
+      }
+
+      .forms.active .sign-in {
+        transform: translateX(100%);
+      }
+
+      .sign-up {
+        left: 0;
+        width: 50%;
+        opacity: 0;
+        z-index: 1;
+      }
+
+      .forms.active .sign-up {
+        transform: translateX(100%);
+        opacity: 1;
+        z-index: 5;
+        animation: move 0.6s;
+      }
+
+      @keyframes move {
+        0%,
+        49.99% {
+          opacity: 0;
+          z-index: 1;
+        }
+        50%,
+        100% {
+          opacity: 1;
+          z-index: 5;
+        }
+      }
+
+      .social-icons {
+        margin: 20px 0;
+        font-size: 24px;
+      }
+
+      .social-icons a {
+        border: 2px solid #ccc;
+        border-radius: 20%;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 3px;
+        width: 45px;
+        height: 45px;
+        font-size: 24px;
+      }
+
+      .toggle-container {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 50%;
+        height: 100%;
+        overflow: hidden;
+        transition: all 0.6s ease-in-out;
+        border-radius: 150px 0 0 100px;
+        z-index: 1000;
+      }
+
+      .forms.active .toggle-container {
+        transform: translateX(-100%);
+        border-radius: 0 150px 100px 0;
+      }
+
+      .toggle {
+        background-color: #342411;
+        height: 100%;
+        color: #fff;
+        position: relative;
+        left: -100%;
+        height: 100%;
+        width: 200%;
+        transform: translateX(0);
+        transition: all 0.6s ease-in-out;
+      }
+
+      .forms.active .toggle {
+        transform: translateX(50%);
+      }
+
+      .toggle-panel {
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 30px;
+        text-align: center;
+        top: 0;
+        transform: translateX(0);
+        transition: all 0.6s ease-in-out;
+      }
+
+      .toggle-left {
+        transform: translateX(-200%);
+      }
+
+      .forms.active .toggle-left {
+        transform: translateX(0);
+      }
+
+      .toggle-right {
+        right: 0;
+        transform: translateX(0);
+      }
+
+      .forms.active .toggle-right {
+        transform: translateX(200%);
+      }
+
+      .logo {
+        width: 220px;
+        height: 50px;
+        position: fixed;
+        top: 20px;
+        left: calc(50% - 110px);
+        transition: transform 0.7s ease;
+      }
+
+      .logo:hover {
+        transform: scale(1.1);
+      }
+
+      .container {
+        overflow: hidden;
+        width: 90%;
+        height: 50%;
+        max-width: 100%;
+        min-width: 800px;
+        min-height: 480px;
+        padding: 1rem;
+        margin-top: -150px;
+      }
+
+      .welcome {
+        overflow: hidden;
+        width: 50%;
+        height: 100%;
+        padding: 1rem;
+        float: left;
+        padding-right: 2rem;
+      }
+
+      .container .welcome h2 {
+        color: #222;
+      }
+
+      .container .welcome h1 {
+        font-size: 72px;
+        margin: 0 0 10px 0;
+        background: -webkit-linear-gradient(#222, #5e503f);
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .container .welcome p {
+        color: #111;
+        text-align: justify;
+      }
+
+      .container .user-login {
+        overflow: hidden;
+        width: 30%;
+        height: 70%;
+        padding: 1rem;
+        float: right;
+        background: #5e503f90;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .user-login h2 {
+        padding-top: 2rem;
+        color: #333;
+        text-align: center;
+      }
+
+      .user-login p {
+        margin-top: 30px;
+        color: #333;
+        text-align: center;
+      }
+
+      button {
+        background-color: var(--color2);
+        color: #fff;
+        font-size: 1rem;
+        padding: 10px 25px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        font-weight: 200;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin: 1em;
+        cursor: pointer;
+        text-align: center;
+      }
+
+      .scroller {
+        max-width: 1500px;
+      }
+
+      .scroller__inner {
+        padding-block: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .scroller[data-animated="true"] {
+        overflow: hidden;
+        -webkit-mask: linear-gradient(
+          90deg,
+          transparent,
+          white 20%,
+          white 80%,
+          transparent
+        );
+        mask: linear-gradient(
+          90deg,
+          transparent,
+          white 20%,
+          white 80%,
+          transparent
+        );
+      }
+
+      .scroller[data-animated="true"] .scroller__inner {
+        width: max-content;
+        flex-wrap: nowrap;
+        animation: scroll var(--_animation-duration, 180s)
+          var(--_animation-direction, forwards) linear infinite;
+      }
+
+      .scroller[data-direction="right"] {
+        --_animation-direction: reverse;
+      }
+
+      .scroller[data-direction="left"] {
+        --_animation-direction: forwards;
+      }
+
+      .scroller[data-speed="fast"] {
+        --_animation-duration: 20s;
+      }
+
+      .scroller[data-speed="slow"] {
+        --_animation-duration: 60s;
+      }
+
+      @keyframes scroll {
+        to {
+          transform: translate(calc(-50% - 0.5rem));
+        }
+      }
+
+      infinite-scroller {
+        display: grid;
+        min-block-size: 100vh;
+        place-content: center;
+        font-family: system-ui;
+        font-size: 1.125rem;
+        background-color: var(--clr-primary-800);
+      }
+
+      .tag-list {
+        margin: 0;
+        padding-inline: 0;
+        list-style: none;
+      }
+
+      .tag-list li {
+        font-size: 32px;
+        padding: 1rem;
+        background: #5e503f;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1rem -0.25rem var(--clr-primary-900);
+      }
+    </style>
   </head>
 
   <body>
     <a class="logo" href="">
-      <img class="logo" src="{% static 'core/images/tshirt.png' %}" alt="T-Shirt" />
+      <img
+        class="logo"
+        src="{% static 'core/images/tshirt.png' %}"
+        alt="T-Shirt"
+      />
     </a>
     <div class="container">
       <div class="welcome">
@@ -29,18 +442,61 @@
       </div>
       <div class="user-login">
         {% if user.is_authenticated %}
-          <h2>Bem vindo de volta , {{ user.username }}!</h2>
-          <a class="logout" href="{% url 'core:logout_handler' %}">Logout</a>
-          <a class="profile" href="{% url 'core:personal_page' %}">Your Account</a>
-        {% else %}  
-          <h2>Login/Create Account</h2>
-          <p>
-              Join our vibrant community of fashion enthusiasts and unleash your styling skills!
-          </p>
-          <a href="{% url 'core:join_page' %}"><button>Sign In/Up</button></a>
+        <h2>Bem vindo de volta , {{ user.username }}!</h2>
+        <a class="logout" href="{% url 'core:logout_handler' %}">Logout</a>
+        <a class="profile" href="{% url 'core:personal_page' %}"
+          >Your Account</a
+        >
+        {% else %}
+        <h2>Login/Create Account</h2>
+        <p>
+          Join our vibrant community of fashion enthusiasts and unleash your
+          styling skills!
+        </p>
+        <a href="{% url 'core:join_page' %}"><button>Sign In/Up</button></a>
         {% endif%}
       </div>
     </div>
-    <script src="script.js"></script>
+    <div class="infinite-scroller">
+      <div class="scroller" data-speed="fast">
+        <ul class="tag-list scroller__inner">
+          <li>Trendy</li>
+          <li>Elegant</li>
+          <li>Stylish</li>
+          <li>Fashionable</li>
+          <li>Sophisticated</li>
+          <li>Glamorous</li>
+          <li>Create</li>
+          <li>Vibrant</li>
+          <li>Futuristic</li>
+          <li>Likeable</li>
+          <li>Shareable</li>
+          <li>Make Friends</li>
+          <li>Viral</li>
+        </ul>
+      </div>
+    </div>
+    <script>
+      const scrollers = document.querySelectorAll(".scroller");
+
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        addAnimation();
+      }
+
+      function addAnimation() {
+        scrollers.forEach((scroller) => {
+          scroller.setAttribute("data-animated", true);
+
+          const scrollerInner = scroller.querySelector(".scroller__inner");
+          const scrollerContent = Array.from(scrollerInner.children);
+
+          scrollerContent.forEach((item) => {
+            const duplicatedItem = item.cloneNode(true);
+            duplicatedItem.setAttribute("aria-hidden", true);
+            scrollerInner.appendChild(duplicatedItem);
+          });
+        });
+      }
+    </script>
   </body>
 </html>

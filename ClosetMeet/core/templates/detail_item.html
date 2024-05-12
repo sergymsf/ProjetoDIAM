@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="stylesheet"
+      href="../../static/style/detailsClothing.css"
+      type="text/css"
+    />
+    <meta charset="UTF-8" />
+    <title>{{ item.name }}</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to right, #f5f5dc, #e8c78b);
+      }
+      .header {
+        background: #5e503f;
+        width: 98.5%;
+        height: 60px;
+        padding: 1rem;
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+      }
+
+      .logo {
+        width: 180px;
+        height: 40px;
+        top: 20px;
+        left: calc(50% - 110px);
+        transition: transform 0.7s ease;
+      }
+
+      .logo:hover {
+        transform: scale(1.1);
+      }
+
+      #user-photo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        transition: transform 0.7s ease;
+      }
+
+      #user-photo:hover {
+        transform: scale(1.2);
+      }
+
+      .pg {
+        position: absolute;
+        top: 200px;
+        right: 150px;
+      }
+
+      .pg img {
+        width: 300px;
+        border: solid black 2px;
+        border-radius: 10px;
+      }
+
+      #card-container {
+        margin: 80px 120px;
+      }
+
+      .remove-button {
+        background: #e62143;
+        border-radius: 11px;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        font-family: Mija, -apple-system, BlinkMacSystemFont, Roboto,
+          "Roboto Slab", "Droid Serif", "Segoe UI", system-ui, Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        justify-content: center;
+        line-height: 33.4929px;
+        padding: 0.8em 1em;
+        text-align: center;
+        text-decoration: none;
+        text-decoration-skip-ink: auto;
+        text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 1px;
+        text-underline-offset: 1px;
+        transition: all 0.2s ease-in-out;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: 200px;
+        word-break: break-word;
+        border: 1px solid #e62143;
+      }
+
+      .remove-button:active,
+      .remove-button:focus {
+        border-bottom-style: none;
+        border-color: #dadada;
+        box-shadow: rgba(0, 0, 0, 0.3) 0 3px 3px inset;
+        outline: 0;
+      }
+
+      .remove-button:hover,
+      .remove-button:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #ff4742;
+      }
+
+      .favorite-button {
+        margin-top: 20px;
+        background: #342411;
+        border-radius: 11px;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        font-family: Mija, -apple-system, BlinkMacSystemFont, Roboto,
+          "Roboto Slab", "Droid Serif", "Segoe UI", system-ui, Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        justify-content: center;
+        line-height: 33.4929px;
+        padding: 0.8em 1em;
+        text-align: center;
+        text-decoration: none;
+        text-decoration-skip-ink: auto;
+        text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 1px;
+        text-underline-offset: 1px;
+        transition: all 0.2s ease-in-out;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: 200px;
+        word-break: break-word;
+        border: 1px solid #342411;
+      }
+
+      .favorite-button:active,
+      .favorite-button:focus {
+        border-bottom-style: none;
+        border-color: #dadada;
+        box-shadow: rgba(0, 0, 0, 0.3) 0 3px 3px inset;
+        outline: 0;
+      }
+
+      .favorite-button:hover,
+      .favorite-button:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #342411;
+      }
+
+      .text-block h1 {
+        font-size: 48px;
+        font-weight: bold;
+        background: -webkit-linear-gradient(#222, #5e503f);
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+  </head>
+
+  {% load static %}
+  <body>
+    <nav class="header">
+      {% load static %}
+      <a href="{% url 'core:initial_page'%}" style="margin-left: 70px">
+        <img
+          class="logo"
+          src="{% static 'core/images/tshirt.png' %}"
+          alt="T-Shirt"
+        />
+      </a>
+      <a href="{% url 'core:personal_page'%}" style="margin-right: 70px">
+        {% if dont_has_picture %}
+        <img
+          id="user-photo"
+          src="{% static 'core/images/default_picture.jpeg' %}"
+        />
+        {% else %}
+        <img
+          id="user-photo"
+          src="{% static  'core/images/'%}{{user.username}}.png"
+        />
+        {% endif %}
+      </a>
+      {% block content %} {% endblock %}
+    </nav>
+    <div id="card-container" data-offset="2">
+      <div id="card">
+        <div class="shine"></div>
+        <div class="text-block">
+          <h1>{{ item.name }}</h1>
+
+          <h3>{{ item.description }}</h3>
+
+          <h4>Price: ${{ item.price }}</h4>
+
+          <div class="buttons">
+            <form method="get" action="{% url 'core:remove_item' item.id %}">
+              {% csrf_token %}
+              <input
+                type="submit"
+                value="Remove from Database"
+                class="remove-button button-color"
+              />
+            </form>
+
+            {% if is_favorite %}
+            <form
+              action="{% url 'core:remove_favorite' item.id %}"
+              method="post"
+            >
+              {% csrf_token %}
+              <input
+                type="submit"
+                value="Remove from Favorites"
+                class="favorite-button"
+              />
+            </form>
+            {% else %}
+            <form action="{% url 'core:add_favorite' item.id %}" method="post">
+              {% csrf_token %}
+              <input
+                type="submit"
+                value="Add to Favorites"
+                class="favorite-button"
+              />
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="pg">
+        <img src="{% static item.image.url %}" />
+      </div>
+    </div>
+  </body>
+</html>
