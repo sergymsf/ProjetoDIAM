@@ -14,5 +14,8 @@ urlpatterns = [
     path('personal-page/my-clothing-items/', views.user_clothing_items, name='user_clothing_items'),
     path('personal-page/detail-item/<int:item_id>/', views.detail_item, name='detail_item'),
     path('personal-page/add-favorite/<int:item_id>/', views.add_favorite, name='add_favorite'),
-    path('personal-page/remove-item/<int:item_id>/', views.remove_item, name='remove_item')
+    path('personal-page/remove-favorite/<int:item_id>/', views.remove_favorite, name='remove_favorite'),
+    path('personal-page/remove-item/<int:item_id>/', views.remove_item, name='remove_item'),
+    path('personal-page/create-outfit/', views.create_outfit, name='create_outfit'),
+    path('personal-page/my-outfits/', views.user_outfit, name='user_outfit'),
     ]

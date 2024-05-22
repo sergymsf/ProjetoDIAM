@@ -28,30 +28,41 @@
                 <p> <i class="fa fa-tag" aria-hidden="true"></i></i> My Clothes</p>
             </a>
 
-            <p><i class="fa fa-check-square" aria-hidden="true"></i> My Creations</p> 
-            
+            <a href="{% url 'core:user_outfit'%}">
+                <p> <i class="fa fa-check-square" aria-hidden="true"></i> My Creations</p> 
+            </a>
+
             <a href="{% url 'core:add_clothing_item'%}">
                 <p><i class="fa fa-upload" aria-hidden="true"></i> Upload Clothes</p>
             </a>
             
-            <p><i class="fa fa-plus-square" aria-hidden="true"></i> Create Outfit</p>
-            <p><i class="fa fa-users" aria-hidden="true"></i> Friends</p>
-            
+            <a href="{% url 'core:create_outfit'%}">
+                <p><i class="fa fa-plus-square" aria-hidden="true"></i> Create Outfit</p>
+            </a>
+                
             
         </div>
         <div class="content">
+            <div>
             {% if dont_has_picture %}
                 <img id="user-photo" src="{% static 'core/images/default_picture.jpeg' %}">
             {% else %}
                 <img id="user-photo" src="{% static  'core/images/'%}{{user.username}}.png">
             {% endif %}
-
+            {% if request.user.profile.favorite_clothing_item %}
+            <h1 style="color: #252525; margin-left:40px">Favorite Clothing Item:</h1>
+            <img style="width: 300px; border: solid black 2px; border-radius: 10px;margin-left:55px;"src="{% static request.user.profile.favorite_clothing_item.image.url %}" alt="Favorite Clothing Item Image">
+            {% endif %}
+            </div>
             <div class="user-info">
                 <h1 id="username">{{request.user.username }}</h1>
                 <h3 style="color: #4B4B4B; margin-bottom:0px;">Bio:</h3>
                 <h1 style="color: #4B4B4B; margin-top:0px;"> {{request.user.profile.bio}}</h1>
             </div>
+            
         </div>
+        
+        
     </main>
 
 </body>

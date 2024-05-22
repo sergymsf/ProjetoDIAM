@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth.models import User
 from django.conf import settings
-from .models import ClothingItem, Profile
+from .models import ClothingItem, Outfit, Profile
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.core.files.storage import FileSystemStorage
@@ -111,6 +111,8 @@ def add_clothing_item(request):
         return HttpResponseRedirect(reverse('core:personal_page')) 
     return render(request, 'add_clothing_item.html', {'dont_has_picture': dont_has_picture})
 
+
+@login_required(login_url=  'core:join_page')
 def user_clothing_items(request):
     user_clothing_items = ClothingItem.objects.filter(owner=request.user)
     context = {
@@ -118,9 +120,16 @@ def user_clothing_items(request):
     }
     return render(request, 'user_clothing_items.html', context)
 
+
+@login_required(login_url=  'core:join_page')
 def detail_item(request, item_id):
     item = ClothingItem.objects.get(id=item_id)
-    return render(request, 'detail_item.html', {'item': item})
+    if request.user.is_authenticated:
+        profile = request.user.profile
+        is_favorite = profile.favorite_clothing_item == item if profile.favorite_clothing_item else False
+    else:
+        is_favorite = False
+    return render(request, 'detail_item.html', {'item': item, 'is_favorite': is_favorite})
 
 def remove_item(request, item_id):
     item = get_object_or_404(ClothingItem, pk=item_id)
@@ -130,12 +139,39 @@ def remove_item(request, item_id):
 
 def add_favorite(request, item_id):
     item = get_object_or_404(ClothingItem, pk=item_id)
-    profile = request.user.profile  # Assuming you have a Profile model associated with User
-
-    # Assign the item as the favorite clothing item for the user's profile
+    profile = request.user.profile  
     profile.favorite_clothing_item = item
     profile.save()
-
-    # Redirect to a relevant page
     return redirect('core:detail_item', item_id=item_id)
 
+
+def remove_favorite(request, item_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    item = get_object_or_404(ClothingItem, pk=item_id)
+    profile = request.user.profile
+    profile.favorite_clothing_item = None
+    profile.save()
+    return redirect('core:detail_item', item_id=item_id)
+
+
+@login_required(login_url=  'core:join_page')
+def create_outfit(request):
+    user_clothing_items = ClothingItem.objects.filter(owner=request.user)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        clothing_items_ids = request.POST.getlist('clothing_items') 
+        outfit = Outfit.objects.create(
+            owner=request.user,
+            name=name,
+            description=description
+        )
+        outfit.clothing_items.add(*clothing_items_ids)
+        return redirect('core:personal_page')
+    else:
+        return render(request, 'create_outfit.html', {'all_clothing_items': user_clothing_items})
+
+def user_outfit(request):
+    user_outfits = Outfit.objects.filter(owner=request.user)
+    return render(request, 'user_outfit.html', {'user_outfits': user_outfits})
