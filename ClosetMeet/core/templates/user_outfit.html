@@ -59,7 +59,7 @@
         -webkit-text-fill-color: transparent;
       }
 
-      .outfits-container{
+      .outfits-container {
         position: absolute;
         top: 150px;
         left: 50px;
@@ -69,7 +69,7 @@
 
       .outfit-card {
         padding: 5px;
-        background: #EEEEEE;
+        background: #eeeeee;
         width: 200px;
         display: inline-block;
         margin: 30px;
@@ -99,7 +99,6 @@
         padding: 5px;
         text-align: center;
       }
-
     </style>
   </head>
   <body>
@@ -128,18 +127,24 @@
       {% block content %} {% endblock %}
     </nav>
 
-    <h1>My Uploaded Outfits</h1>
+    <h1>{{ owner.username }}'s Outfits</h1>
     <div class="outfits-container">
-      {% for outfit in user_outfits %}
-      <div class="outfit-card">
-        <img src="{{ outfit.image.url }}" alt="Outfit" />
-        <h1>OLA</h1>
-        <br>
-        <br><br><br>
-      
-        <div class="outfit-name">{{ outfit.name }}</div>
-      </div>
-
+      {% for outfit in outfits %}
+      <a href="{% url 'core:detail_outfit' outfit.id %}">
+        <div class="outfit-card">
+          <div>
+            {% for item in outfit.clothing_items.all %}
+            <div>
+              <img
+                src="{% static 'core/images/'%}{{item.image}}"
+                alt="{{ item.name }}"
+              />
+            </div>
+            {% endfor %}
+          </div>
+          <div class="outfit-name">{{ outfit.name }}</div>
+        </div>
+      </a>
       {% empty %}
       <p>No outfits created.</p>
       {% endfor %}

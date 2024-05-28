@@ -18,4 +18,5 @@ urlpatterns = [
     path('personal-page/remove-item/<int:item_id>/', views.remove_item, name='remove_item'),
     path('personal-page/create-outfit/', views.create_outfit, name='create_outfit'),
     path('personal-page/my-outfits/', views.user_outfit, name='user_outfit'),
+    path('personal-page/my-outfits/<int:outfit_id>/', views.detail_outfit, name='detail_outfit'),
     ]

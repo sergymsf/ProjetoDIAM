@@ -173,5 +173,12 @@ def create_outfit(request):
         return render(request, 'create_outfit.html', {'all_clothing_items': user_clothing_items})
 
 def user_outfit(request):
-    user_outfits = Outfit.objects.filter(owner=request.user)
-    return render(request, 'user_outfit.html', {'user_outfits': user_outfits})
+    owner = get_object_or_404(User, id=request.user.id)
+    outfits = Outfit.objects.filter(owner=owner).prefetch_related('clothing_items')
+    return render(request, 'user_outfit.html', {'owner': owner, 'outfits': outfits})
+
+
+def detail_outfit(request, outfit_id):
+    outfit = get_object_or_404(Outfit, id=outfit_id)
+    clothing_items = outfit.clothing_items.all()
+    return render(request, 'detail_outfit.html', {'outfit': outfit, 'clothing_items': clothing_items})

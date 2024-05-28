@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ outfit.name }}</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to right, #f5f5dc, #e8c78b);
+      }
+      .header {
+        background: #5e503f;
+        width: 98.5%;
+        height: 60px;
+        padding: 1rem;
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+      }
+
+      .logo {
+        width: 180px;
+        height: 40px;
+        transition: transform 0.7s ease;
+      }
+
+      .logo:hover {
+        transform: scale(1.1);
+      }
+
+      #user-photo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        transition: transform 0.7s ease;
+      }
+
+      #user-photo:hover {
+        transform: scale(1.2);
+      }
+
+      #card-container {
+        margin: 80px 120px;
+      }
+
+      .clothing-item {
+        margin-bottom: 40px;
+      }
+
+      
+      .text-block h1 {
+          font-size: 48px;
+          font-weight: bold;
+          background: -webkit-linear-gradient(#222, #5e503f);
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .text-block p {
+          font-size: 18px;
+        }
+        
+        .clothing-item img {
+          width: 200px;
+          border: solid black 2px;
+          border-radius: 10px;
+          margin-right: 20px;
+        }
+  
+        .clothing-item h4 {
+          margin: 0;
+        }
+    </style>
+  </head>
+
+  {% load static %}
+  <body>
+    <nav class="header">
+      <a href="{% url 'core:initial_page' %}" style="margin-left: 70px">
+        <img
+          class="logo"
+          src="{% static 'core/images/tshirt.png' %}"
+          alt="T-Shirt"
+        />
+      </a>
+      <a href="{% url 'core:personal_page' %}" style="margin-right: 70px">
+        {% if dont_has_picture %}
+        <img
+          id="user-photo"
+          src="{% static 'core/images/default_picture.jpeg' %}"
+          alt="User Photo"
+        />
+        {% else %}
+        <img
+          id="user-photo"
+          src="{% static 'core/images/' %}{{ user.username }}.png"
+          alt="User Photo"
+        />
+        {% endif %}
+      </a>
+    </nav>
+
+    <div id="card-container">
+      <div class="text-block">
+        <h1>{{ outfit.name }}</h1>
+        <p>{{ outfit.description }}</p>
+      </div>
+      <div>
+        <h2>Clothing Items</h2>
+        {% for item in clothing_items %}
+        <div class="clothing-container">
+          <div class="clothing-item">
+            <img
+              src="{% static 'core/images/'%}{{item.image}}"
+              alt="{{ item.name }}"
+            />
+            <div class="item-details">
+              <h4>{{ item.name }}</h4>
+              <p>{{ item.description }}</p>
+              <p>Price: ${{ item.price }}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </body>
+</html>
