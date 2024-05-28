@@ -182,3 +182,26 @@ def detail_outfit(request, outfit_id):
     outfit = get_object_or_404(Outfit, id=outfit_id)
     clothing_items = outfit.clothing_items.all()
     return render(request, 'detail_outfit.html', {'outfit': outfit, 'clothing_items': clothing_items})
+
+def remove_outfit(request, item_id):
+    item = get_object_or_404(ClothingItem, pk=item_id)
+    item.delete()
+    return HttpResponseRedirect(reverse('core:personal_page')) 
+
+
+def add_favorite_outfit(request, item_id):
+    item = get_object_or_404(ClothingItem, pk=item_id)
+    profile = request.user.profile  
+    profile.favorite_clothing_item = item
+    profile.save()
+    return redirect('core:detail_item', item_id=item_id)
+
+
+def remove_favorite_outfit(request, item_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    item = get_object_or_404(ClothingItem, pk=item_id)
+    profile = request.user.profile
+    profile.favorite_clothing_item = None
+    profile.save()
+    return redirect('core:detail_item', item_id=item_id)

@@ -53,29 +53,115 @@
         margin-bottom: 40px;
       }
 
-      
       .text-block h1 {
-          font-size: 48px;
-          font-weight: bold;
-          background: -webkit-linear-gradient(#222, #5e503f);
+        font-size: 48px;
+        font-weight: bold;
+        background: -webkit-linear-gradient(#222, #5e503f);
         background-clip: text;
         -webkit-text-fill-color: transparent;
       }
 
       .text-block p {
-          font-size: 18px;
-        }
-        
-        .clothing-item img {
-          width: 200px;
-          border: solid black 2px;
-          border-radius: 10px;
-          margin-right: 20px;
-        }
-  
-        .clothing-item h4 {
-          margin: 0;
-        }
+        font-size: 18px;
+      }
+
+      .clothing-item img {
+        width: 200px;
+        border: solid black 2px;
+        border-radius: 10px;
+        margin-right: 20px;
+      }
+
+      .clothing-item h4 {
+        margin: 0;
+      }
+
+      .remove-button {
+        background: #e62143;
+        border-radius: 11px;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        font-family: Mija, -apple-system, BlinkMacSystemFont, Roboto,
+          "Roboto Slab", "Droid Serif", "Segoe UI", system-ui, Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        justify-content: center;
+        line-height: 33.4929px;
+        padding: 0.8em 1em;
+        text-align: center;
+        text-decoration: none;
+        text-decoration-skip-ink: auto;
+        text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 1px;
+        text-underline-offset: 1px;
+        transition: all 0.2s ease-in-out;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: 200px;
+        word-break: break-word;
+        border: 1px solid #e62143;
+      }
+
+      .remove-button:active,
+      .remove-button:focus {
+        border-bottom-style: none;
+        border-color: #dadada;
+        box-shadow: rgba(0, 0, 0, 0.3) 0 3px 3px inset;
+        outline: 0;
+      }
+
+      .remove-button:hover,
+      .remove-button:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #ff4742;
+      }
+
+      .favorite-button {
+        margin-top: 20px;
+        background: #342411;
+        border-radius: 11px;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        font-family: Mija, -apple-system, BlinkMacSystemFont, Roboto,
+          "Roboto Slab", "Droid Serif", "Segoe UI", system-ui, Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        justify-content: center;
+        line-height: 33.4929px;
+        padding: 0.8em 1em;
+        text-align: center;
+        text-decoration: none;
+        text-decoration-skip-ink: auto;
+        text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 1px;
+        text-underline-offset: 1px;
+        transition: all 0.2s ease-in-out;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: 200px;
+        word-break: break-word;
+        border: 1px solid #342411;
+      }
+
+      .favorite-button:active,
+      .favorite-button:focus {
+        border-bottom-style: none;
+        border-color: #dadada;
+        box-shadow: rgba(0, 0, 0, 0.3) 0 3px 3px inset;
+        outline: 0;
+      }
+
+      .favorite-button:hover,
+      .favorite-button:active {
+        background-color: initial;
+        background-position: 0 0;
+        color: #342411;
+      }
     </style>
   </head>
 
@@ -129,6 +215,38 @@
         </div>
         {% endfor %}
       </div>
+    </div>
+    <div class="buttons">
+      <form method="get" action="{% url 'core:remove_item' outfit.id %}">
+        {% csrf_token %}
+        <input
+          type="submit"
+          value="Remove from Database"
+          class="remove-button button-color"
+        />
+      </form>
+
+      {% if is_favorite %}
+      <form
+        action="{% url 'core:remove_favorite_outfit' outfit.id %}"
+        method="post"
+      >
+        {% csrf_token %}
+        <input
+          type="submit"
+          value="Remove from Favorites"
+          class="favorite-button"
+        />
+      </form>
+      {% else %}
+      <form
+        action="{% url 'core:add_favorite_outfit' outfit.id %}"
+        method="post"
+      >
+        {% csrf_token %}
+        <input type="submit" value="Add to Favorites" class="favorite-button" />
+      </form>
+      {% endif %}
     </div>
   </body>
 </html>
